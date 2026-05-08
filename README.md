@@ -8,6 +8,7 @@ A lightweight Node.js library for integrating **rNet Auth** and **AI Provider** 
 - **Token Management**: Exchange authorization codes for tokens and refresh expired tokens.
 - **AI Integration**: Easy methods to chat with AI models using standard or streaming responses.
 - **Zero Dependencies**: Uses native `fetch` and `crypto` (Node.js 18+).
+- **TypeScript Support**: Includes full type definitions (`index.d.ts`).
 - **Modern JavaScript**: Built with ESM support.
 
 ## Prerequisites
