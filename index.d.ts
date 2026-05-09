@@ -4,9 +4,6 @@ export interface RNetAuthConfig {
     redirectUri: string;
 }
 
-export interface RNetAiConfig {
-    aiProvider?: string;
-}
 
 export interface PKCE {
     verifier: string;
@@ -31,7 +28,7 @@ export class RNetAuth {
 }
 
 export class RNetAi {
-    constructor(config?: RNetAiConfig);
+    constructor();
     chat(body: any, accessToken: string, model: string): Promise<any>;
     chatStream(body: any, accessToken: string, model: string): Promise<ReadableStream>;
 }

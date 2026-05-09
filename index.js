@@ -130,11 +130,11 @@ class RNetAuth {
  */
 class RNetAi {
     /**
-     * @param {Object} [config] Configuration object
-     * @param {string} [config.aiProvider] Optional custom AI provider URL
+     * @param {Object} config Configuration object
+     * @param {string} config.aiProvider The AI provider URL
      */
-    constructor(config = {}) {
-        this.aiProvider = config.aiProvider || "https://ai-provider.rnetai.org";
+    constructor() {
+        this.aiProvider = "https://ai-provider.rnetai.org";
     }
 
     /**

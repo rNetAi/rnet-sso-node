@@ -30,10 +30,6 @@ try {
     assert.strictEqual(ai.aiProvider, 'https://ai-provider.rnetai.org');
     console.log('✓ RNetAi instantiated correctly with default provider');
 
-    const customAi = new RNetAi({ aiProvider: 'https://custom.ai' });
-    assert.strictEqual(customAi.aiProvider, 'https://custom.ai');
-    console.log('✓ RNetAi instantiated correctly with custom provider');
-
     console.log('\nAll basic tests passed!');
 } catch (error) {
     console.error('\nTest failed:');

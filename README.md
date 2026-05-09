@@ -34,7 +34,7 @@ const config = {
 };
 
 const auth = new RNetAuth(config);
-const ai = new RNetAi(); // Uses default provider, or pass { aiProvider: '...' }
+const ai = new RNetAi();
 ```
 
 ### 2. Generate Authorization URL (OAuth2 PKCE)
