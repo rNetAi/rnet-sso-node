@@ -44,7 +44,7 @@ class RNetAuth {
             response_type: "code",
             client_id: this.clientId,
             redirect_uri: this.redirectUri,
-            scope: "openid profile email"
+            scope: "openid profile email" // doesn't make sense for me to use this but it work so i don't touch it
         });
 
         if (challenge) {
