@@ -1,6 +1,6 @@
-# rNet Auth Node.js Library
+# RNet Auth Node.js Library
 
-A lightweight Node.js library for integrating **rNet Auth** and **AI Provider** services. This library allows users to authenticate via rNet and pay for AI model token costs directly using their rNet account.
+A lightweight Node.js library for integrating **RNet Auth** and **AI Provider** services. This library allows users to authenticate via RNet and pay for AI model token costs directly using their RNet account.
 
 ## Features
 

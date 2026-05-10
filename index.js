@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 
 /**
- * rNet Auth Node.js Library
- * A backend library to verify and exchange OAuth2 tokens and interact with rNet AI.
+ * RNet Auth Node.js Library
+ * A backend library to verify and exchange OAuth2 tokens and interact with rNet Ai.
  */
 class RNetAuth {
     /**
@@ -125,8 +125,8 @@ class RNetAuth {
 }
 
 /**
- * rNet AI Library
- * Interaction with rNet AI services.
+ * rNet Ai Library
+ * Interaction with rNet Ai services.
  */
 class RNetAi {
     /**
@@ -138,7 +138,7 @@ class RNetAi {
     }
 
     /**
-     * Calls the rNet AI Provider API
+     * Calls the rNet Ai Provider API
      * @param {Object} body The AI request payload
      * @param {string} accessToken The current user's access token
      * @param {string} model AI model name
@@ -161,7 +161,7 @@ class RNetAi {
     }
 
     /**
-     * Calls the rNet AI Provider API and returns the response stream
+     * Calls the rNet Ai Provider API and returns the response stream
      * @param {Object} body The AI request payload
      * @param {string} accessToken The current user's access token
      * @param {string} model AI model name
