@@ -36,10 +36,10 @@ class RNetAuth {
     /**
      * Generates the authorization URL to redirect the user to the login page.
      * @param {string} [challenge] The PKCE code challenge
-     * @param {string} [scopes] The scopes to request (default: "openid profile email")
+     * @param {string} [state] An optional state parameter to prevent CSRF and manage multiple users
      * @returns {string} The authorization URL
      */
-    getAuthorizationUrl(challenge) {
+    getAuthorizationUrl(challenge, state) {
         const params = new URLSearchParams({
             response_type: "code",
             client_id: this.clientId,
@@ -50,6 +50,10 @@ class RNetAuth {
         if (challenge) {
             params.append('code_challenge', challenge);
             params.append('code_challenge_method', 'S256');
+        }
+
+        if (state) {
+            params.append('state', state);
         }
 
         return `${this.issuer}/oauth2/authorize?${params.toString()}`;

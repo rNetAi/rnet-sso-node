@@ -43,7 +43,9 @@ const ai = new RNetAi();
 const { verifier, challenge } = auth.generatePKCE(); // Store 'verifier' in user session
 
 // Get the URL to redirect the user to
-const authUrl = auth.getAuthorizationUrl(challenge);
+// challenge: PKCE code challenge (optional)
+// state: An optional string to maintain state between the request and callback (recommended for security)
+const authUrl = auth.getAuthorizationUrl(challenge, 'optional-state');
 ```
 
 ### 3. Exchange Code for Tokens
@@ -63,7 +65,12 @@ const newAccessToken = refreshedTokens.access_token;
 ### 5. Chat with AI
 ```javascript
 const payload = {
-  messages: [{ role: 'user', content: 'Hello!' }]
+  contents: [
+    {
+      role: 'user',
+      parts: [{ text: 'Hello!' }]
+    }
+  ]
 };
 
 const response = await ai.chat(payload, accessToken, 'gemini-2.5-flash-lite');

@@ -22,7 +22,7 @@ export interface TokenResponse {
 export class RNetAuth {
     constructor(config: RNetAuthConfig);
     generatePKCE(): PKCE;
-    getAuthorizationUrl(challenge: string): string;
+    getAuthorizationUrl(challenge?: string, state?: string): string;
     exchangeCodeForToken(code: string, codeVerifier?: string): Promise<TokenResponse>;
     refreshAccessToken(refreshToken: string): Promise<TokenResponse>;
 }
