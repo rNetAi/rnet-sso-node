@@ -1,6 +1,6 @@
 {
   "name": "@rnet-ai/rnet-sso-node",
-  "version": "0.2.0-beta.4",
+  "version": "1.0.0",
   "description": "Node.js library for integrating RNet SSO and AI Provider services.",
   "main": "index.js",
   "types": "index.d.ts",
