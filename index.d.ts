@@ -25,6 +25,7 @@ export class RNetAuth {
     getAuthorizationUrl(challenge?: string, state?: string): string;
     exchangeCodeForToken(code: string, codeVerifier?: string): Promise<TokenResponse>;
     refreshAccessToken(refreshToken: string): Promise<TokenResponse>;
+    getUserInfo(accessToken: string): Promise<Record<string, any>>;
 }
 
 export class RNetAi {

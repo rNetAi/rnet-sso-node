@@ -1,5 +1,8 @@
 import crypto from 'crypto';
 
+const ISSUER = "https://central-backend.rnetai.org";
+const AI_PROVIDER = "https://ai-provider.rnetai.org";
+
 /**
  * RNet Auth Node.js Library
  * A backend library to verify and exchange OAuth2 tokens and interact with rNet Ai.
@@ -19,8 +22,12 @@ class RNetAuth {
         this.clientId = config.clientId;
         this.clientSecret = config.clientSecret;
         this.redirectUri = config.redirectUri;
-        this.issuer = "https://central-backend.rnetai.org";
-        this.aiProvider = "https://ai-provider.rnetai.org";
+        Object.defineProperty(this, 'issuer', {
+            value: ISSUER,
+            writable: false,
+            configurable: false,
+            enumerable: true
+        });
     }
 
     /**
@@ -56,7 +63,7 @@ class RNetAuth {
             params.append('state', state);
         }
 
-        return `${this.issuer}/oauth2/authorize?${params.toString()}`;
+        return `${ISSUER}/oauth2/authorize?${params.toString()}`;
     }
 
     /**
@@ -66,7 +73,7 @@ class RNetAuth {
      * @returns {Promise<Object>} Token response
      */
     async exchangeCodeForToken(code, codeVerifier) {
-        const tokenEndpoint = `${this.issuer}/oauth2/token`;
+        const tokenEndpoint = `${ISSUER}/oauth2/token`;
 
         const params = new URLSearchParams({
             grant_type: 'authorization_code',
@@ -98,7 +105,7 @@ class RNetAuth {
      * @returns {Promise<Object>} Token response
      */
     async refreshAccessToken(refreshToken) {
-        const tokenEndpoint = `${this.issuer}/oauth2/token`;
+        const tokenEndpoint = `${ISSUER}/oauth2/token`;
 
         const params = new URLSearchParams({
             grant_type: 'refresh_token',
@@ -119,6 +126,25 @@ class RNetAuth {
         return this._handleResponse(response);
     }
 
+    /**
+     * Fetches the authenticated user's profile from the OAuth UserInfo endpoint.
+     * @param {string} accessToken The current user's access token
+     * @returns {Promise<Object>} UserInfo claims such as sub, email, name, user_id, role, and status
+     */
+    async getUserInfo(accessToken) {
+        if (!accessToken) throw new Error("accessToken is required");
+
+        const response = await fetch(`${ISSUER}/userinfo`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        return this._handleResponse(response);
+    }
+
     async _handleResponse(response) {
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
@@ -133,12 +159,13 @@ class RNetAuth {
  * Interaction with rNet Ai services.
  */
 class RNetAi {
-    /**
-     * @param {Object} config Configuration object
-     * @param {string} config.aiProvider The AI provider URL
-     */
     constructor() {
-        this.aiProvider = "https://ai-provider.rnetai.org";
+        Object.defineProperty(this, 'aiProvider', {
+            value: AI_PROVIDER,
+            writable: false,
+            configurable: false,
+            enumerable: true
+        });
     }
 
     /**
@@ -153,7 +180,7 @@ class RNetAi {
         if (!model) throw new Error("model is required");
 
         const params = new URLSearchParams({ access_token: accessToken, model });
-        const url = `${this.aiProvider}/ai?${params.toString()}`;
+        const url = `${AI_PROVIDER}/ai?${params.toString()}`;
 
         const response = await fetch(url, {
             method: 'POST',
@@ -176,7 +203,7 @@ class RNetAi {
         if (!model) throw new Error("model is required");
 
         const params = new URLSearchParams({ access_token: accessToken, model });
-        const url = `${this.aiProvider}/ai/stream?${params.toString()}`;
+        const url = `${AI_PROVIDER}/ai/stream?${params.toString()}`;
 
         const response = await fetch(url, {
             method: 'POST',

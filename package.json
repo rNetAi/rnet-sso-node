@@ -1,7 +1,7 @@
 {
-  "name": "@rnet-ai/rnet-sso-node",
+  "name": "@rnet-ai/rnet-oauth-node",
   "version": "1.0.0",
-  "description": "Node.js library for integrating RNet SSO and AI Provider services.",
+  "description": "Node.js library for integrating RNet OAuth.",
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
@@ -10,7 +10,6 @@
   },
   "keywords": [
     "rnet",
-    "sso",
     "oauth2",
     "ai"
   ],
@@ -21,12 +20,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rNetAi/rnet-sso-node.git"
+    "url": "git+https://github.com/rNetAi/rnet-oauth-node.git"
   },
   "bugs": {
-    "url": "https://github.com/rNetAi/rnet-sso-node/issues"
+    "url": "https://github.com/rNetAi/rnet-oauth-node/issues"
   },
-  "homepage": "https://github.com/rNetAi/rnet-sso-node#readme",
+  "homepage": "https://github.com/rNetAi/rnet-oauth-node#readme",
   "files": [
     "index.js",
     "index.d.ts",

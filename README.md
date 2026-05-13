@@ -1,11 +1,12 @@
-# RNet Auth Node.js Library
+# RNet OAuth Node.js Library
 
-A lightweight Node.js library for integrating **RNet Auth** and **AI Provider** services. This library allows users to authenticate via RNet and pay for AI model token costs directly using their RNet account.
+A lightweight Node.js library for integrating **RNet OAuth** services. This library allows users to authenticate via RNet and pay for AI model token costs directly using their RNet account.
 
 ## Features
 
 - **OAuth2 PKCE Support**: Secure authorization code flow with automatic code verifier and challenge generation.
 - **Token Management**: Exchange authorization codes for tokens and refresh expired tokens.
+- **UserInfo Endpoint**: Fetch the authenticated user's RNet profile with an access token.
 - **AI Integration**: Easy methods to chat with AI models using standard or streaming responses.
 - **Zero Dependencies**: Uses native `fetch` and `crypto` (Node.js 18+).
 - **TypeScript Support**: Includes full type definitions (`index.d.ts`).
@@ -18,14 +19,14 @@ A lightweight Node.js library for integrating **RNet Auth** and **AI Provider** 
 ## Installation
 
 ```bash
-npm install @rnet-ai/rnet-sso-node
+npm install @rnet-ai/rnet-oauth-node
 ```
 
 ## Quick Start
 
 ### 1. Initialize the Clients
 ```javascript
-import { RNetAuth, RNetAi } from '@rnet-ai/rnet-sso-node';
+import { RNetAuth, RNetAi } from '@rnet-ai/rnet-oauth-node';
 
 const config = {
   clientId: 'client-id',
@@ -62,7 +63,17 @@ const refreshedTokens = await auth.refreshAccessToken(refreshToken);
 const newAccessToken = refreshedTokens.access_token;
 ```
 
-### 5. Chat with AI
+### 5. Get User Info
+```javascript
+const userInfo = await auth.getUserInfo(accessToken);
+console.log(userInfo.email);
+console.log(userInfo.name);
+```
+
+The UserInfo response comes from RNet's `/userinfo` endpoint and may include:
+`sub`, `email`, `email_verified`, `name`, `preferred_username`, `user_id`, `role`, and `status`.
+
+### 6. Chat with AI
 ```javascript
 const payload = {
   contents: [
@@ -77,7 +88,7 @@ const response = await ai.chat(payload, accessToken, 'gemini-2.5-flash-lite');
 console.log(response);
 ```
 
-### 6. Streaming AI Response
+### 7. Streaming AI Response
 ```javascript
 const stream = await ai.chatStream(payload, accessToken, "gemini-2.5-flash-lite");
 // Process the ReadableStream...
