@@ -88,7 +88,7 @@ const response = await ai.chat(payload, accessToken, 'gemini-2.5-flash-lite');
 console.log(response);
 ```
 
-### 7. Streaming AI Response
+### 7. Streaming AI Response (Untested)
 ```javascript
 const stream = await ai.chatStream(payload, accessToken, "gemini-2.5-flash-lite");
 // Process the ReadableStream...
