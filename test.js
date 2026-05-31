@@ -52,6 +52,42 @@ try {
     assert.strictEqual(userInfo.email, 'user@example.com');
     console.log('UserInfo request works');
 
+    // Test Gemini File Upload
+    globalThis.fetch = async (url, options) => {
+        assert.ok(url.includes('https://ai-provider.rnetai.org/ai/upload'));
+        assert.ok(url.includes('access_token=test-token'));
+        assert.ok(url.includes('model=gemini-2.5-flash-lite'));
+        assert.strictEqual(options.method, 'POST');
+        // options.body is a FormData instance
+        return new Response(JSON.stringify({
+            fileReference: "files/abc123",
+            name: "files/abc123",
+            mimeType: "text/plain",
+            provider: "gemini"
+        }), { status: 200 });
+    };
+
+    const uploadRes = await ai.geminiFileUpload('test-token', 'gemini-2.5-flash-lite', Buffer.from('test data'), 'text/plain', 'test.txt');
+    assert.strictEqual(uploadRes.fileReference, 'files/abc123');
+    console.log('Gemini file upload request works');
+
+    // Test OpenAI File Delete
+    globalThis.fetch = async (url, options) => {
+        assert.ok(url.includes('https://ai-provider.rnetai.org/ai/upload'));
+        assert.ok(url.includes('access_token=test-token'));
+        assert.ok(url.includes('model=gpt-4o'));
+        assert.ok(url.includes('fileId=file-xyz789'));
+        assert.strictEqual(options.method, 'DELETE');
+        return new Response(JSON.stringify({
+            deleted: true,
+            fileId: "file-xyz789"
+        }), { status: 200 });
+    };
+
+    const delRes = await ai.openAIFileDelete('test-token', 'gpt-4o', 'file-xyz789');
+    assert.strictEqual(delRes.deleted, true);
+    console.log('OpenAI file delete request works');
+
     console.log('\nAll basic tests passed!');
 } catch (error) {
     console.error('\nTest failed:');

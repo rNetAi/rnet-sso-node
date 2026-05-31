@@ -94,5 +94,46 @@ const stream = await ai.chatStream(payload, accessToken, "gemini-2.5-flash-lite"
 // Process the ReadableStream...
 ```
 
+### 8. File Upload (Untested)
+```javascript
+const fs = require('fs');
+const fileBuffer = fs.readFileSync('document.pdf');
+
+// Upload to Gemini
+const geminiUpload = await ai.geminiFileUpload(accessToken, 'gemini-2.5-flash-lite', fileBuffer, 'application/pdf', 'document.pdf');
+console.log(geminiUpload.fileReference); // Use this in chat payload
+
+// Upload to OpenAI
+const openaiUpload = await ai.openAIFileUpload(accessToken, 'gpt-4o', fileBuffer, 'application/pdf', 'document.pdf');
+```
+
+### 9. File Deletion (Untested)
+```javascript
+// Gemini files auto-delete after 48 hours, so there is no delete method.
+// Delete an OpenAI file:
+await ai.openAIFileDelete(accessToken, 'gpt-4o', openaiUpload.fileReference);
+```
+
+### 10. AI Chat with File & Tools (Untested)
+```javascript
+const payload = {
+  contents: [
+    {
+      role: 'user',
+      parts: [
+        { text: 'Based on this document, what is my name? Also search the web for the current weather in London.' },
+        { fileData: { fileUri: geminiUpload.fileReference, mimeType: geminiUpload.mimeType } }
+      ]
+    }
+  ],
+  tools: [
+    { googleSearch: {} } // Enable Google Search tool
+  ]
+};
+
+const response = await ai.chat(payload, accessToken, 'gemini-2.5-flash-lite');
+console.log(response);
+```
+
 ## License
 This project is licensed under the MIT License.

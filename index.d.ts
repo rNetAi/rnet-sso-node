@@ -19,6 +19,19 @@ export interface TokenResponse {
     [key: string]: any;
 }
 
+export interface FileUploadResponse {
+    fileReference: string;
+    name: string;
+    mimeType: string;
+    provider: string;
+}
+
+export interface FileDeleteResponse {
+    deleted: boolean;
+    fileId: string;
+    error?: string;
+}
+
 export class RNetAuth {
     constructor(config: RNetAuthConfig);
     generatePKCE(): PKCE;
@@ -32,6 +45,11 @@ export class RNetAi {
     constructor();
     chat(body: any, accessToken: string, model: string): Promise<any>;
     chatStream(body: any, accessToken: string, model: string): Promise<ReadableStream>;
+    geminiFileUpload(accessToken: string, model: string, file: Blob | Buffer, mimeType: string, displayName?: string): Promise<FileUploadResponse>;
+    openAIFileUpload(accessToken: string, model: string, file: Blob | Buffer, mimeType: string, displayName?: string): Promise<FileUploadResponse>;
+    claudeFileUpload(accessToken: string, model: string, file: Blob | Buffer, mimeType: string, displayName?: string): Promise<FileUploadResponse>;
+    openAIFileDelete(accessToken: string, model: string, fileId: string): Promise<FileDeleteResponse>;
+    claudeFileDelete(accessToken: string, model: string, fileId: string): Promise<FileDeleteResponse>;
 }
 
 export default RNetAuth;

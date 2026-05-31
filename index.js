@@ -147,7 +147,10 @@ class RNetAuth {
 
     async _handleResponse(response) {
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
+            const text = await response.text().catch(() => "");
+            let errorData = {};
+            try { errorData = JSON.parse(text); } catch(e) {}
+            console.error("\n🚨 [RNetAi Debug] RAW ERROR BODY:", text, "\n");
             throw new Error(`Request failed: ${response.status} - ${errorData.error || ''}`);
         }
         return await response.json();
@@ -212,16 +215,129 @@ class RNetAi {
         });
 
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
+            const text = await response.text().catch(() => "");
+            let errorData = {};
+            try { errorData = JSON.parse(text); } catch(e) {}
+            console.error("\n🚨 [RNetAi Debug] RAW ERROR BODY:", text, "\n");
             throw new Error(`AI stream request failed: ${response.status} - ${errorData.error || ''}`);
         }
 
         return response.body;
     }
 
+    /**
+     * Uploads a file for use with Gemini models.
+     * Gemini files auto-delete after 48 hours.
+     * @param {string} accessToken JWT token
+     * @param {string} model Gemini model name (e.g. "gemini-2.5-flash-lite")
+     * @param {Blob|Buffer} file Binary file data
+     * @param {string} mimeType MIME type (e.g. "image/png", "video/mp4", "application/pdf")
+     * @param {string} [displayName] Human-readable name
+     * @returns {Promise<Object>} { fileReference, name, mimeType, provider }
+     */
+    async geminiFileUpload(accessToken, model, file, mimeType, displayName) {
+        return this._uploadFile(accessToken, model, file, mimeType, displayName);
+    }
+
+    /**
+     * Uploads a file for use with OpenAI models.
+     * Files persist until explicitly deleted via openAIFileDelete.
+     * @param {string} accessToken JWT token
+     * @param {string} model OpenAI model name (e.g. "gpt-4o")
+     * @param {Blob|Buffer} file Binary file data
+     * @param {string} mimeType MIME type (e.g. "image/png")
+     * @param {string} [displayName] Filename
+     * @returns {Promise<Object>} { fileReference, name, mimeType, provider }
+     */
+    async openAIFileUpload(accessToken, model, file, mimeType, displayName) {
+        return this._uploadFile(accessToken, model, file, mimeType, displayName);
+    }
+
+    /**
+     * Uploads a file for use with Claude models.
+     * Files persist until explicitly deleted via claudeFileDelete.
+     * @param {string} accessToken JWT token
+     * @param {string} model Claude model name (e.g. "claude-3-sonnet-20240229")
+     * @param {Blob|Buffer} file Binary file data
+     * @param {string} mimeType MIME type (e.g. "image/png", "application/pdf")
+     * @param {string} [displayName] Filename
+     * @returns {Promise<Object>} { fileReference, name, mimeType, provider }
+     */
+    async claudeFileUpload(accessToken, model, file, mimeType, displayName) {
+        return this._uploadFile(accessToken, model, file, mimeType, displayName);
+    }
+
+    /**
+     * Deletes a file previously uploaded for OpenAI models.
+     * @param {string} accessToken JWT token
+     * @param {string} model OpenAI model name
+     * @param {string} fileId The fileReference from the upload response
+     * @returns {Promise<Object>} { deleted: boolean, fileId: string, error?: string }
+     */
+    async openAIFileDelete(accessToken, model, fileId) {
+        return this._deleteFile(accessToken, model, fileId);
+    }
+
+    /**
+     * Deletes a file previously uploaded for Claude models.
+     * @param {string} accessToken JWT token
+     * @param {string} model Claude model name
+     * @param {string} fileId The fileReference from the upload response
+     * @returns {Promise<Object>} { deleted: boolean, fileId: string, error?: string }
+     */
+    async claudeFileDelete(accessToken, model, fileId) {
+        return this._deleteFile(accessToken, model, fileId);
+    }
+
+    async _uploadFile(accessToken, model, file, mimeType, displayName) {
+        if (!accessToken) throw new Error("accessToken is required");
+        if (!model) throw new Error("model is required");
+        if (!file) throw new Error("file is required");
+        if (!mimeType) throw new Error("mimeType is required");
+
+        const params = new URLSearchParams({ access_token: accessToken, model });
+        const url = `${AI_PROVIDER}/ai/upload?${params.toString()}`;
+
+        const formData = new FormData();
+
+        if (Buffer.isBuffer(file)) {
+            formData.append('file', new Blob([file], { type: mimeType }), displayName || 'file');
+        } else {
+            formData.append('file', file, displayName || 'file');
+        }
+
+        formData.append('mimeType', mimeType);
+        if (displayName) {
+            formData.append('displayName', displayName);
+        }
+
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+
+        return this._handleResponse(response);
+    }
+
+    async _deleteFile(accessToken, model, fileId) {
+        if (!accessToken) throw new Error("accessToken is required");
+        if (!model) throw new Error("model is required");
+        if (!fileId) throw new Error("fileId is required");
+
+        const params = new URLSearchParams({ access_token: accessToken, model, fileId });
+        const url = `${AI_PROVIDER}/ai/upload?${params.toString()}`;
+
+        const response = await fetch(url, { method: 'DELETE' });
+
+        return this._handleResponse(response);
+    }
+
     async _handleResponse(response) {
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
+            const text = await response.text().catch(() => "");
+            let errorData = {};
+            try { errorData = JSON.parse(text); } catch(e) {}
+            console.error("\n🚨 [RNetAi Debug] RAW ERROR BODY:", text, "\n");
             throw new Error(`Request failed: ${response.status} - ${errorData.error || ''}`);
         }
         return await response.json();

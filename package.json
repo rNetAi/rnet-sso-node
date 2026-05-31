@@ -1,6 +1,6 @@
 {
   "name": "@rnet-ai/rnet-oauth-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node.js library for integrating RNet OAuth.",
   "main": "index.js",
   "types": "index.d.ts",
